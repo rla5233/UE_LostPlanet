@@ -42,26 +42,25 @@ void ABasicMonsterSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// 트리거 박스 활성화 또는 클라이언트 일시 return
-	if (true == TriggerIsActive || false == HasAuthority())
+	// 서버이고 트리거 비활성화시
+	if (true == HasAuthority() && false == TriggerIsActive)
 	{
-		return;
-	}
+		if (0.0f < TimeCount)
+		{
+			TimeCount -= DeltaTime;
+			return;
+		}
 
-	if (0.0f < TimeCount)
-	{
-		TimeCount -= DeltaTime;
-		return;
-	}
+		EGameStage CurGameStage = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->GetCurStage();
+		if (0 >= TotalSpawnCount || EGameStage::MissionClear == CurGameStage)
+		{
+			Destroy();
+			return;
+		}
 
-	if (0 >= TotalSpawnCount || EGameStage::MissionClear == UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld())->GetCurStage())
-	{
-		Destroy();
-		return;
+		SpawnBasicMonster();
+		TimeCount = SpawnDelayTime;
 	}
-
-	SpawnBasicMonster();
-	TimeCount = SpawnDelayTime;
 }
 
 void ABasicMonsterSpawner::SpawnBasicMonster()
