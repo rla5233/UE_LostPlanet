@@ -35,6 +35,8 @@ EBTNodeResult::Type UBTTaskNode_BasicMutantJumpAttack::ExecuteTask(UBehaviorTree
 	}
 
 	ABasicMonsterAIController* AIController = Mutant->GetAIController();
+	AIController->StopMovement();
+
 	AActor* TargetActor = Cast<AActor>(AIController->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
 
 	FMotionWarpingTarget Target = {};
