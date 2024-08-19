@@ -206,7 +206,7 @@ void ABasicMonsterBase::SetDead_Implementation()
 	DynamicMaterials.Empty();
 	for (int32 i = 0; i < MaterialsInterface.Num(); i++)
 	{
-		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->CreateDynamicMaterialInstance(i, MaterialsInterface[i], TEXT("None"));
+		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->CreateDynamicMaterialInstance(i, MaterialsInterface[i]);
 		DynamicMaterials.Add(MatInstDynamic);
 	}
 

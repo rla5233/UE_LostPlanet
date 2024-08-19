@@ -114,8 +114,7 @@ void ABossMonsterBase::BeginPlay()
 	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
 	if (nullptr == BossUHD)
 	{
-		LOG(MonsterLog, Fatal, "BossHUD is Null");
-		return;
+		LOG(MonsterLog, Error, "BossHUD is Null");
 	}
 
 	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetBossName(FText::FromString(SettingData->BaseData->BossName));
@@ -225,7 +224,7 @@ void ABossMonsterBase::SetDead_Implementation()
 	DynamicMaterials.Empty();
 	for (int32 i = 0; i < MaterialsInterface.Num(); i++)
 	{
-		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->CreateDynamicMaterialInstance(i, MaterialsInterface[i], TEXT("None"));
+		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->CreateDynamicMaterialInstance(i, MaterialsInterface[i]);
 		DynamicMaterials.Add(MatInstDynamic);
 	}
 
