@@ -7,12 +7,10 @@
 
 void UMonsterRandomAnimInstance::SetRandomAnimIndex(uint8 Key, int& Index)
 {
-	if (false == GetOwningActor()->HasAuthority())
+	if (true == GetOwningActor()->HasAuthority())
 	{
-		return;
+		UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
+		int Size = AllAnimMontages[Key].AnimMontages.Num() - 1;
+		Index = MainGameInst->Random.RandRange(0, Size);
 	}
-
-	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	int Size = AllAnimMontages[Key].AnimMontages.Num() - 1;
-	Index = MainGameInst->Random.RandRange(0, Size);
 }
