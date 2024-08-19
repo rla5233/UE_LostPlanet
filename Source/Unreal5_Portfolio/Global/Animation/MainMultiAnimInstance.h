@@ -13,7 +13,7 @@ struct UNREAL5_PORTFOLIO_API FAnimMontageGroup
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere)
 	TArray<UAnimMontage*> AnimMontages;
 
 };
