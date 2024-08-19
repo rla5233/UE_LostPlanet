@@ -201,12 +201,12 @@ void ABasicMonsterBase::SetDead_Implementation()
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodParticle, GetActorTransform());
 
 	// Dissolve Setting
-	TArray<class UMaterialInterface*> MaterialsInterface = GetMesh()->GetMaterials();
+	TArray<UMaterialInterface*> MaterialsInterface = GetMesh()->GetMaterials();
 
 	DynamicMaterials.Empty();
 	for (int32 i = 0; i < MaterialsInterface.Num(); i++)
 	{
-		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->UPrimitiveComponent::CreateDynamicMaterialInstance(i, MaterialsInterface[i], TEXT("None"));
+		UMaterialInstanceDynamic* MatInstDynamic = GetMesh()->CreateDynamicMaterialInstance(i, MaterialsInterface[i], TEXT("None"));
 		DynamicMaterials.Add(MatInstDynamic);
 	}
 
