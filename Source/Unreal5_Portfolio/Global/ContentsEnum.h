@@ -79,32 +79,6 @@ enum class ECameraShakeState : uint8
 };
 
 UENUM(BlueprintType)
-enum class ETestMonsterState : uint8
-{
-	Idle,
-	Patrol,
-	Chase,
-	Fall,
-	Jump,
-	Climb,
-	ClimbEnd,
-	Attack,
-	Dead,
-	JumpAttack,
-	Scream,
-	Rotate,
-	GroundAttack,
-};
-
-UENUM(BlueprintType)
-enum class ETestMonsterType : uint8
-{
-	Noraml,
-	Crawl,
-	Boss
-};
-
-UENUM(BlueprintType)
 enum class EBasicMonsterState : uint8
 {
 	Idle,
@@ -118,24 +92,6 @@ enum class EBasicMonsterState : uint8
 	Attack,
 	JumpAttack,
 	Dead
-};
-
-UENUM(BlueprintType)
-enum class ETestMonsterAnim : uint8
-{
-	Idle		UMETA(DisplayName = "Idle"),
-	Walk		UMETA(DisplayName = "Walk"),
-	Run			UMETA(DisplayName = "Run"),
-	Attack		UMETA(DisplayName = "Attack"),
-	Dead		UMETA(DisplayName = "Dead"),
-	Climb		UMETA(DisplayName = "Climb"),
-	ClimbEnd	UMETA(DisplayName = "ClimbEnd"),
-	Scream		UMETA(DisplayName = "Scream"),
-	JumpAttack	UMETA(DisplayName = "JumpAttack"),
-	LRotate		UMETA(DisplayName = "LeftRotate"),
-	RRotate		UMETA(DisplayName = "RightRotate"),
-	LAttack		UMETA(DisplayName = "LeftAttack"),
-	RAttack		UMETA(DisplayName = "RightAttack"),
 };
 
 UENUM(BlueprintType)
