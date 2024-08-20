@@ -37,15 +37,10 @@ EBTNodeResult::Type UBTTaskNode_BasicMutantJumpAttack::ExecuteTask(UBehaviorTree
 	ABasicMonsterAIController* AIController = Mutant->GetAIController();
 	AIController->StopMovement();
 
-	AActor* TargetActor = Cast<AActor>(AIController->GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor")));
-
+	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
 	FMotionWarpingTarget Target = {};
 	Target.Name = FName("JumpAttackTarget");
 	Target.Location = TargetActor->GetActorLocation();
-	Target.Rotation = TargetActor->GetActorRotation();
-
-	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(Mutant->GetActorLocation(), Target.Location);
-	Mutant->SetActorRotation(TurnRot);
 
 	UMotionWarpingComponent* MotionWarpingComp = Mutant->GetMotionWarpingComponent();
 	if (nullptr == MotionWarpingComp)
@@ -53,8 +48,11 @@ EBTNodeResult::Type UBTTaskNode_BasicMutantJumpAttack::ExecuteTask(UBehaviorTree
 		LOG(MonsterLog, Fatal, TEXT("MotionWarpingComp Is Not Valid"));
 		return EBTNodeResult::Aborted;
 	}
-
+	
 	MotionWarpingComp->AddOrUpdateWarpTarget(Target);
+
+	FRotator TurnRot = UKismetMathLibrary::FindLookAtRotation(Mutant->GetActorLocation(), Target.Location);
+	Mutant->SetActorRotation(TurnRot);
 
 	Mutant->ChangeRandomAnimation(EBasicMonsterAnim::JumpAttack);
 	UAnimMontage* JumpAttackMontage = Mutant->GetAnimInstance()->GetKeyAnimMontage(EBasicMonsterAnim::JumpAttack, Mutant->GetAnimIndex());
