@@ -3,7 +3,7 @@
 
 #include "MainGameLevel/Monster/BasicMonster/BasicMonsterSpawner.h"
 #include "MainGameLevel/Monster/Base/BasicMonsterBase.h"
-#include "MainGameLevel/Player/MainCharacter.h"
+#include "PartDevLevel/Character/ParentsCharacter.h"
 
 #include "Global/MainGameBlueprintFunctionLibrary.h"
 #include "Global/MainGameInstance.h"
@@ -12,7 +12,6 @@
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
 
-#include "TestLevel/Character/TestCharacter.h"
 
 ABasicMonsterSpawner::ABasicMonsterSpawner()
 {
@@ -104,22 +103,16 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 
 void ABasicMonsterSpawner::TriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	ATestCharacter* Player = Cast<ATestCharacter>(OtherActor);
-	if (nullptr == Player)
+	if (AParentsCharacter* Player = Cast<AParentsCharacter>(OtherActor))
 	{
-		return;
-	}
-
-	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
-	if (nullptr == MainGameState)
-	{
-		return;
-	}
-
-	EGameStage CurStage = MainGameState->GetCurStage();
-	if (TriggerCheckStage == CurStage)
-	{
-		TriggerIsActive = false;
-		TriggerBox->SetActive(TriggerIsActive);
+		if (AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld()))
+		{
+			EGameStage CurStage = MainGameState->GetCurStage();
+			if (TriggerCheckStage == CurStage)
+			{
+				TriggerIsActive = false;
+				TriggerBox->SetActive(TriggerIsActive);
+			}
+		}
 	}
 }
