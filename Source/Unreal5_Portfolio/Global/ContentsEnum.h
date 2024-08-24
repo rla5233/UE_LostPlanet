@@ -108,14 +108,6 @@ enum class EBasicMonsterAnim : uint8
 	ClimbEnd	UMETA(DisplayName = "ClimbEnd")
 };
 
-UENUM()
-enum class EMonsterSpawnerType : uint8
-{
-	Once,
-	Continuous,
-	Max
-};
-
 UENUM(BlueprintType)
 enum class EBossMonsterState : uint8
 {

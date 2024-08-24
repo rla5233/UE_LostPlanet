@@ -4,8 +4,10 @@
 #include "BasicMonsterAIController.h"
 #include "MainGameLevel/Player/MainPlayerState.h"
 #include "MainGameLevel/Player/MainCharacter.h"
+#include "MainGameLevel/Monster/Base/BTTaskNodeBase_Monster.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "GenericTeamAgentInterface.h"
@@ -34,30 +36,20 @@ void ABasicMonsterAIController::OnPossess(APawn* InPawn)
 
 void ABasicMonsterAIController::PlayerDetect(AActor* Other, FAIStimulus const Stimulus)
 {
-	if (false == Stimulus.WasSuccessfullySensed())
+	if (true == Stimulus.WasSuccessfullySensed())
 	{
-		return;
+		if (AParentsCharacter* TargetPlayer = Cast<AParentsCharacter>(Other))
+		{
+			if (ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState()))
+			{
+				UObject* PrevTarget = GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor"));
+				if (0.0f < TargetPlayerState->GetPlayerHp() && nullptr == PrevTarget)
+				{
+					GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), TargetPlayer);
+				}
+			}			
+		}
 	}
-
-	AParentsCharacter* TargetPlayer = Cast<AParentsCharacter>(Other);
-	if (nullptr == TargetPlayer)
-	{
-		return;
-	}
-
-	ATestPlayerState* TargetPlayerState = Cast<ATestPlayerState>(TargetPlayer->GetPlayerState());
-	if (0.0f >= TargetPlayerState->GetPlayerHp())
-	{
-		return;
-	}
-
-	UObject* PrevTarget = GetBlackboardComponent()->GetValueAsObject(TEXT("TargetActor"));
-	if (nullptr != PrevTarget)
-	{
-		return;
-	}
-
-	GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), TargetPlayer);
 }
 
 ETeamAttitude::Type ABasicMonsterAIController::GetTeamAttitudeTowards(const AActor& Other) const
