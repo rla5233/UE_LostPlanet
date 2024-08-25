@@ -33,7 +33,7 @@ EBTNodeResult::Type UBTTaskNode_BasicMonsterPatrol::ExecuteTask(UBehaviorTreeCom
 
 	FNavLocation PatrolLocation(FVector::ZeroVector);
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
-	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->OriginPos, MonsterData->PatrolRange, PatrolLocation);
+	bool IsFind = NavSystem->GetRandomReachablePointInRadius(MonsterData->OriginPos, MonsterData->BaseData->PatrolRange, PatrolLocation);
 	if (false == IsFind)
 	{
 		return EBTNodeResult::Type::Failed;
@@ -56,7 +56,7 @@ void UBTTaskNode_BasicMonsterPatrol::TickTask(UBehaviorTreeComponent& OwnerComp,
 	AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
 	if (nullptr != TargetActor)
 	{
-		switch (Monster->GetSettingData()->bScream)
+		switch (Monster->GetSettingData()->BaseData->bScream)
 		{
 		case true:
 			StateChange(OwnerComp, EBasicMonsterState::Scream);

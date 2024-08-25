@@ -15,7 +15,6 @@ void ABasicMutant::InitData(const FMonsterDataRow* BaseData)
 	Super::InitData(BaseData);
 
 	MutantSettingData = NewObject<UBasicMutantData>(this);
-	MutantSettingData->bScream = true;
 
 	SettingData = MutantSettingData;
 }

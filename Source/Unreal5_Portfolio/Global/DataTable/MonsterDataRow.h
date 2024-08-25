@@ -26,6 +26,14 @@ public:
 	UPROPERTY(EditAnywhere)
 	float WalkSpeed = 300.0f;
 
+	// Patrol 범위
+	UPROPERTY(EditAnywhere)
+	float PatrolRange = 800.0f;
+
+	// Scream 여부
+	UPROPERTY(EditAnywhere)
+	bool bScream = false;
+
 	// 달리기 속도
 	UPROPERTY(EditAnywhere)
 	float RunSpeed = 600.0f;

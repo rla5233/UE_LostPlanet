@@ -45,7 +45,7 @@ void UBTTaskNode_BasicMonsterIdle::TickTask(UBehaviorTreeComponent& OwnerComp, u
     AActor* TargetActor = GetValueAsObject<AActor>(OwnerComp, TEXT("TargetActor"));
     if (nullptr != TargetActor)
     {
-        switch (MonsterData->bScream)
+        switch (MonsterData->BaseData->bScream)
         {
         case true:
             StateChange(OwnerComp, EBasicMonsterState::Scream);

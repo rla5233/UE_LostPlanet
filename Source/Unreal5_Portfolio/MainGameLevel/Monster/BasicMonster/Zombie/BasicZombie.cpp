@@ -10,7 +10,6 @@ void ABasicZombie::InitData(const FMonsterDataRow* BaseData)
 	Super::InitData(BaseData);
 
 	ZombieSettingData = NewObject<UBasicZombieData>(this);
-	ZombieSettingData->bScream = false;
 
 	SettingData = ZombieSettingData;
 }

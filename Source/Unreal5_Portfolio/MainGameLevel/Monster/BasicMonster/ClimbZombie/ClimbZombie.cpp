@@ -15,7 +15,6 @@ void AClimbZombie::InitData(const FMonsterDataRow* BaseData)
 	Super::InitData(BaseData);
 
 	ClimbZombieSettingData = NewObject<UClimbZombieData>(this);
-	ClimbZombieSettingData->bScream = false;
 
 	SettingData = ClimbZombieSettingData;
 }
