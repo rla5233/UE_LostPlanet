@@ -68,7 +68,7 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 	FVector CurPos = GetActorLocation();
 
 	// 고정 스폰
-	for (FFixedSpawn& CurSpawnInfo : FixedSpawn)
+	for (FFixedSpawn& CurSpawnInfo : FixedSpawnInfo)
 	{
 		for (int i = 0; i < CurSpawnInfo.SpawnFixedMonsterCount; ++i)
 		{

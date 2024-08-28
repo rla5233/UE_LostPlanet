@@ -42,17 +42,17 @@ private:
 	void SpawnBasicMonster();
 	
 private:
-	// Spawn Monster UClass
+	// Fixed Spawn Type
+	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
+	TArray<FFixedSpawn> FixedSpawnInfo;
+
+	// Random Spawn Monster UClass
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	TArray<TSubclassOf<ABasicMonsterBase>> RandomMonsterUClass;
 
 	// Number of creation per time (Random)
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
 	int SpawnRandomMonsterCount = 0;
-
-	// Fixed Spawn Type
-	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
-	TArray<FFixedSpawn> FixedSpawn;
 
 	// Total Number of Spawn
 	UPROPERTY(EditAnywhere, meta = (AllowprivateAccess = "true"))
