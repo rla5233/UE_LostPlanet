@@ -81,10 +81,6 @@ void ABasicMonsterBase::BeginPlay()
 	{
 		// AI 컨트롤러 세팅
 		AIController = GetController<ABasicMonsterAIController>();
-		if (AIController)
-		{
-			AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
-		}
 	}
 }
 

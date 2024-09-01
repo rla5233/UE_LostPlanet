@@ -65,78 +65,50 @@ void ABossMonsterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// 데이터 세팅
-	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	if (nullptr == MainGameInst)
+	if (UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()))
 	{
-		LOG(MonsterLog, Fatal, TEXT("MainGameInstance Is Null"));
-		return;
-	}
+		if (const FBossMonsterDataRow* BaseData = MainGameInst->GetBossMonsterData(BaseDataName))
+		{
+			// 데이터 세팅
+			InitData(BaseData);
+			if (SettingData)
+			{
+				SettingData->BaseData = BaseData;
+				SettingData->Hp = BaseData->MaxHp;
+			}
 
-	const FBossMonsterDataRow* BaseData = MainGameInst->GetBossMonsterData(BaseDataName);
-	if (nullptr == BaseData)
-	{
-		LOG(MonsterLog, Fatal, TEXT("BaseData Is Null"));
-		return;
-	}
-
-	InitData(BaseData);
-	if (nullptr == SettingData)
-	{
-		LOG(MonsterLog, Fatal, TEXT("SettingData Is Null"));
-		return;
-	}
-
-	SettingData->BaseData = BaseData;
-	SettingData->Hp = BaseData->MaxHp;
-
-	// 애니메이션 세팅
-	AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInst)
-	{
-		LOG(MonsterLog, Fatal, TEXT("AnimInst Is Null"));
-		return;
-	}
-
-	for (TPair<EBossMonsterAnim, UAnimMontage*> AnimMontageGroup : BaseData->AnimMontages)
-	{
-		AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
+			// 애니메이션 세팅
+			AnimInst = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
+			if (AnimInst)
+			{
+				for (TPair<EBossMonsterAnim, UAnimMontage*> AnimMontageGroup : BaseData->AnimMontages)
+				{
+					AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
+				};
+			}
+		}
 	}
 
 	// 몬스터 체력 UHD
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (nullptr == PlayerController)
+	if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
-		LOG(MonsterLog, Fatal, "PlayerController is Null");
-		return;
+		if (AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD()))
+		{
+			Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetBossName(FText::FromString(SettingData->BaseData->BossName));
+			Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetHp(SettingData->Hp, SettingData->BaseData->MaxHp);
+			BossUHD->UIOn(EUserWidgetType::BossHpbar);
+		}
 	}
-
-	AMainGameHUD* BossUHD = Cast<AMainGameHUD>(PlayerController->GetHUD());
-	if (nullptr == BossUHD)
-	{
-		LOG(MonsterLog, Error, "BossHUD is Null");
-	}
-
-	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetBossName(FText::FromString(SettingData->BaseData->BossName));
-	Cast<UBossHpbarUserWidget>(BossUHD->GetWidget(EUserWidgetType::BossHpbar))->SetHp(SettingData->Hp, SettingData->BaseData->MaxHp);
-	BossUHD->UIOn(EUserWidgetType::BossHpbar);
 
 	// Binding
 	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ABossMonsterBase::OnAttackOverlapEnd);
 	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// 서버 체크
-	if (false == HasAuthority())
+	if (true == HasAuthority())
 	{
-		return;
-	}
-
-	// AI 컨트롤러 세팅
-	AIController = GetController<ABossMonsterAIController>();
-	if (nullptr == AIController)
-	{
-		LOG(MonsterLog, Fatal, TEXT("AIController Is Null"));
-		return;
+		// AI 컨트롤러 세팅
+		AIController = GetController<ABossMonsterAIController>();
 	}
 }
 
