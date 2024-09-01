@@ -72,8 +72,13 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 	{
 		for (int i = 0; i < CurSpawnInfo.SpawnFixedMonsterCount; ++i)
 		{
+			float RandomX = MainInst->Random.FRandRange(-1.0, 1.0);
+			float RandomY = MainInst->Random.FRandRange(-1.0, 1.0);
+			FVector RandomUnitVector = FVector(RandomX, RandomY, 0.0).GetSafeNormal2D();
+
 			float SpawnRadius = MainInst->Random.FRandRange(0, MaxSpawnRadius);
-			FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
+			FVector SpawnLocation = CurPos + RandomUnitVector * SpawnRadius;
+
 			ABasicMonsterBase* NewMonster = GetWorld()->SpawnActor<ABasicMonsterBase>(CurSpawnInfo.MonsterUClass, SpawnLocation, FRotator::ZeroRotator);
 		
 			if (nullptr != NewMonster && true == IsChasePlayer)
@@ -87,10 +92,15 @@ void ABasicMonsterSpawner::SpawnBasicMonster()
 	int Size = RandomMonsterUClass.Num() - 1;
 	for (int32 i = 0; i < SpawnRandomMonsterCount; ++i)
 	{
-		int TypeIndex = MainInst->Random.RandRange(0, Size);
+		float RandomX = MainInst->Random.FRandRange(-1.0, 1.0);
+		float RandomY = MainInst->Random.FRandRange(-1.0, 1.0);
+		FVector RandomUnitVector = FVector(RandomX, RandomY, 0.0).GetSafeNormal2D();
+
 		float SpawnRadius = MainInst->Random.FRandRange(0, MaxSpawnRadius);
-		FVector SpawnLocation = CurPos + MainInst->Random.GetUnitVector().GetSafeNormal2D() * SpawnRadius;
-		ABasicMonsterBase* NewMonster = GetWorld()->SpawnActor<ABasicMonsterBase>(RandomMonsterUClass[TypeIndex], SpawnLocation, FRotator::ZeroRotator);
+		FVector SpawnLocation = CurPos + RandomUnitVector * SpawnRadius;
+
+		int MonsterIndex = MainInst->Random.RandRange(0, Size);
+		ABasicMonsterBase* NewMonster = GetWorld()->SpawnActor<ABasicMonsterBase>(RandomMonsterUClass[MonsterIndex], SpawnLocation, FRotator::ZeroRotator);
 
 		if (nullptr != NewMonster && true == IsChasePlayer)
 		{
