@@ -162,37 +162,23 @@ void ABasicMonsterBase::Damaged(float Damage)
 
 void ABasicMonsterBase::SetChasePlayer()
 {
-	if (false == HasAuthority())
+	if (true == HasAuthority())
 	{
-		return;
+		if (AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld()))
+		{
+			if (UActorGroup* PlayerGroup = MainGameState->GetActorGroup(EObjectType::Player))
+			{
+				if (UMainGameInstance* MainGameInstance = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()))
+				{
+					// Find Player
+					int32 PlayerIndex = MainGameInstance->Random.RandRange(0, PlayerGroup->Actors.Num() - 1);
+
+					AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[PlayerIndex]);
+					AIController->GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), static_cast<uint8>(EBasicMonsterState::Chase));
+				}
+			}
+		}
 	}
-
-	UMainGameInstance* MainGameInstance = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	if (nullptr == MainGameInstance)
-	{
-		LOG(MonsterLog, Fatal, TEXT("MainGameInstance Is Nullptr"));
-		return;
-	}
-
-	AMainGameState* MainGameState = UMainGameBlueprintFunctionLibrary::GetMainGameState(GetWorld());
-	if (nullptr == MainGameState)
-	{
-		LOG(MonsterLog, Fatal, TEXT("MainGameState Is Nullptr"));
-		return;
-	}
-
-	UActorGroup* PlayerGroup = MainGameState->GetActorGroup(EObjectType::Player);
-	if (nullptr == PlayerGroup)
-	{
-		LOG(MonsterLog, Fatal, TEXT("PlayerGroup Is Nullptr"));
-		return;
-	}
-
-	// Find Player
-	int32 PlayerIndex = MainGameInstance->Random.RandRange(0, PlayerGroup->Actors.Num() - 1);
-
-	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), PlayerGroup->Actors[PlayerIndex]);
-	AIController->GetBlackboardComponent()->SetValueAsEnum(TEXT("State"), static_cast<uint8>(EBasicMonsterState::Chase));
 }
 
 void ABasicMonsterBase::SetDead_Implementation()
