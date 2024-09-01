@@ -67,7 +67,7 @@ void ABossMonsterBase::BeginPlay()
 
 	if (UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()))
 	{
-		if (const FBossMonsterDataRow* BaseData = MainGameInst->GetBossMonsterData(BaseDataName))
+		if (const FBossMonsterDataRow* BaseData = MainGameInst->GetBossMonsterData(BaseDataRowName))
 		{
 			// 데이터 세팅
 			InitData(BaseData);

@@ -49,7 +49,7 @@ void ABasicMonsterBase::BeginPlay()
 	
 	if (UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()))
 	{
-		if (const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName))
+		if (const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataRowName))
 		{
 			// 데이터 세팅
 			InitData(BaseData);

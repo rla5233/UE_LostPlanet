@@ -101,7 +101,7 @@ protected:
 private:	
 	// Data
 	UPROPERTY(EditAnywhere, Category = "Data", meta = (AllowPrivateAccess = "true"))
-	FName BaseDataName;
+	FName BaseDataRowName;
 
 	UPROPERTY()
 	ABasicMonsterAIController* AIController = nullptr;
