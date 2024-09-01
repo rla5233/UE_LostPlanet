@@ -47,64 +47,45 @@ void ABasicMonsterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// 데이터 세팅
-	UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld());
-	if (nullptr == MainGameInst)
+	if (UMainGameInstance* MainGameInst = UMainGameBlueprintFunctionLibrary::GetMainGameInstance(GetWorld()))
 	{
-		LOG(MonsterLog, Fatal, TEXT("MainGameInstance Is Null"));
-		return;
+		if (const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName))
+		{
+			// 데이터 세팅
+			InitData(BaseData);
+			if (SettingData)
+			{
+				SettingData->OriginPos = GetActorLocation();
+				SettingData->Hp = BaseData->MaxHp;
+				SettingData->BaseData = BaseData;
+			}
+
+			// 애니메이션 세팅
+			AnimInst = Cast<UMonsterRandomAnimInstance>(GetMesh()->GetAnimInstance());
+			if (AnimInst)
+			{
+				for (TPair<EBasicMonsterAnim, FAnimMontageGroup> AnimMontageGroup : BaseData->AllAnimMontages)
+				{
+					AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
+				}
+			}
+		}
 	}
-
-	const FMonsterDataRow* BaseData = MainGameInst->GetMonsterData(BaseDataName);
-	if (nullptr == BaseData)
-	{
-		LOG(MonsterLog, Fatal, TEXT("BaseData Is Null"));
-		return;
-	}
-
-	InitData(BaseData);
-	if (nullptr == SettingData)
-	{
-		LOG(MonsterLog, Fatal, TEXT("SettingData Is Null"));
-		return;
-	}
-
-	SettingData->OriginPos = GetActorLocation();
-	SettingData->Hp = BaseData->MaxHp;
-	SettingData->BaseData = BaseData;
-
-	// 애니메이션 세팅
-	AnimInst = Cast<UMonsterRandomAnimInstance>(GetMesh()->GetAnimInstance());
-	if (nullptr == AnimInst)
-	{
-		LOG(MonsterLog, Fatal, TEXT("AnimInst Is Null"));
-		return;
-	}
-
-	for (TPair<EBasicMonsterAnim, FAnimMontageGroup> AnimMontageGroup : BaseData->AllAnimMontages)
-	{
-		AnimInst->PushAnimation(AnimMontageGroup.Key, AnimMontageGroup.Value);
-	}	
 
 	// Binding
 	AttackComponent->OnComponentEndOverlap.AddDynamic(this, &ABasicMonsterBase::OnAttackOverlapEnd);
 	AttackComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// 서버 체크
-	if (false == HasAuthority())
+	if (true == HasAuthority())
 	{
-		return;
+		// AI 컨트롤러 세팅
+		AIController = GetController<ABasicMonsterAIController>();
+		if (AIController)
+		{
+			AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
+		}
 	}
-
-	// AI 컨트롤러 세팅
-	AIController = GetController<ABasicMonsterAIController>();
-	if (nullptr == AIController)
-	{
-		LOG(MonsterLog, Fatal, TEXT("AIController Is Null"));
-		return;
-	}
-
-	AIController->GetBlackboardComponent()->SetValueAsObject(TEXT("MonsterData"), SettingData);
 }
 
 void ABasicMonsterBase::Tick(float DeltaTime)
