@@ -5,7 +5,7 @@ C++, UnrealEngine5, VisualStudio2022 를 이용한 LostPlanet 자작입니다.
 ## 설치
 #### git clone
 ```
-git clone https://github.com/rla5233/DirectX_CrazyArcade.git
+git clone https://github.com/rla5233/UnrealProject_LostPlanet.git
 ```
 
 #### 솔루션 실행
