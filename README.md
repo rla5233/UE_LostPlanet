@@ -5,7 +5,7 @@ C++, UnrealEngine5, VisualStudio2022 를 이용한 LostPlanet 자작 게임입�
 ## 설치
 #### git clone
 ```
-git clone https://github.com/rla5233/UnrealProject_LostPlanet.git
+git clone https://github.com/rla5233/UE_LostPlanet.git
 ```
 
 #### 프로젝트 실행
